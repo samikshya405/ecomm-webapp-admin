@@ -5,6 +5,7 @@ export const categoriesSlice = createSlice({
   initialState: {
     categoriesList: [],
     selectedSubCategoriesList: [],
+    subCategoryList:[]
   },
   reducers: {
     setCategoriesList: (state, action) => {
@@ -13,9 +14,12 @@ export const categoriesSlice = createSlice({
     setSelecetedSubCategories: (state, action) => {
       state.selectedSubCategoriesList= action.payload
     },
+    setSubCategoryList:(state,action)=>{
+      state.subCategoryList=action.payload
+    }
   },
 });
 
-export const { setCategoriesList, setSelecetedSubCategories } =
+export const { setCategoriesList, setSelecetedSubCategories, setSubCategoryList } =
   categoriesSlice.actions;
 export default categoriesSlice.reducer;

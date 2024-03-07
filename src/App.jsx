@@ -12,10 +12,12 @@ import Users from './pages/user/Users'
 import AddProduct from './pages/product/AddProduct'
 import EditProduct from './pages/product/EditProduct'
 import Customers from './pages/Customer/Customers'
-import SubCategories from './pages/Categories/SubCategories'
+// import SubCategories from './pages/Categories/SubCategories'
 import FlashSale from './pages/flashsale/FlashSale'
 import FeaturedProduct from './pages/Featured/FeaturedProduct'
 import Imageslider from './pages/imageslider/Imageslider'
+import AddCategories from './pages/Categories/AddCategories'
+import EditCategory from './pages/Categories/EditCategory'
 
 const App = () => {
   return (
@@ -25,7 +27,9 @@ const App = () => {
       <Route path='/signup' element={<Signup/>}/>
       <Route path='/' element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
       <Route path='/categories' element={<PrivateRoute><Categories/></PrivateRoute>}/>
-      <Route path='/subcategories' element={<PrivateRoute><SubCategories/></PrivateRoute>}/>
+      <Route path='/addCategory' element={<PrivateRoute><AddCategories/></PrivateRoute>}/>
+      {/* <Route path='/subcategories' element={<PrivateRoute><SubCategories/></PrivateRoute>}/> */}
+      <Route path='/editCatgeory/:id' element={<PrivateRoute><EditCategory/></PrivateRoute>}/>
 
       <Route path='/orders' element={<PrivateRoute><OrderHistory/></PrivateRoute>}/>
       <Route path='/product' element={<PrivateRoute><Product/></PrivateRoute>}/>

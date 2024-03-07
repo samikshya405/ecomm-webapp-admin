@@ -4,6 +4,7 @@ import persistReducer from "redux-persist/es/persistReducer";
 import storage from 'redux-persist/lib/storage';
 import categoriesReducer from './Categories/categoriesSlice'
 import productReducer from './product/productSlice'
+import imageSliderReducers from './imageslider/imageslider'
 
 
 const persistConfig = {
@@ -16,7 +17,8 @@ export const store = configureStore({
     reducer:{
         auth:persistAuthReducer,
         categories:categoriesReducer,
-        product:productReducer
+        product:productReducer,
+        imageSlider:imageSliderReducers
     }
    
 })

@@ -1,35 +1,91 @@
-import { AppBar, Box, IconButton, List, ListItem, Stack, Typography } from "@mui/material";
-import React from "react";
-import { useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
-
+import {
+  AppBar,
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import './sidebar.css'
+import { SiderbarData } from "../../data/Data";
+import PersonIcon from '@mui/icons-material/Person';
+import { motion } from "framer-motion";
+import MenuIcon from '@mui/icons-material/Menu';
+import { signOut } from "firebase/auth";
+import { setUserInfo } from "../../Redux/Auth/authSlice";
+import { auth } from "../../Firebase";
 
 const Sidebar = () => {
-    const {userInfo} = useSelector(state=>state.auth)
+  const { userInfo } = useSelector((state) => state.auth);
+  const [selected, setSelected] = useState('Dashboard');
+
+  const [expanded, setExpaned] = useState(true)
+  const navigate= useNavigate()
+  const dispatch= useDispatch()
+
+  const sidebarVariants = {
+    true: {
+      left : '0'
+    },
+    false:{
+      left : '-60%'
+    }
+  }
+  const handleSignout=()=>{
+    signOut(auth).then(() => {
+      dispatch(setUserInfo({}));
+    }).catch((error) => {
+      toast.error(error.message)
+    });
+  }
+  
   return (
     <>
-      <Box position='sticky' top={0} style={{ backgroundColor: 'skyblue', width: '200px', height: '100vh' }} padding={2} >
-      <Typography padding={2}>Hello {userInfo.fullName}!</Typography>
-      <hr />
+      <div className="bars" style={expanded?{left: '60%'}:{left: '5%'}} onClick={()=>setExpaned(!expanded)}>
+        <MenuIcon />
+      </div>
+    <motion.div className='sidebar'
+    variants={sidebarVariants}
+    animate={window.innerWidth<=768?`${expanded}`:''}
+    >
+      {/* logo */}
+      <div className="logo">
+        {/* <img src='' alt="logo" /> */}
+        <span>
+          Sh<span>o</span>ps
+        </span>
+      </div>
 
-        <Stack  direction={"column"} spacing={5} sx={{ paddingTop: 3}}>
-            <NavLink to='/' style={{ textDecoration: 'none'}}> Dashboard</NavLink>
-            <NavLink to='/orders' style={{ textDecoration: 'none' }}> Orders</NavLink>
+      <div className="menu">
+        {SiderbarData.map((item, index) => {
+          return (
+            
+            <NavLink to={item.link}
+              className='menuItem'
+              key={index}
+             
 
-            <NavLink to='/categories' style={{ textDecoration: 'none' }}>Categories</NavLink>
-            {/* <NavLink to='/subCategories' style={{ textDecoration: 'none' }}>Sub-Categories</NavLink> */}
-            <NavLink to='/product' style={{ textDecoration: 'none' }}>Product</NavLink>
-            <NavLink to='/imageSlider' style={{ textDecoration: 'none' }}> Image Slider</NavLink>
-            <NavLink to='/flashSale' style={{ textDecoration: 'none' }}> Flash Sale</NavLink>
-            <NavLink to='/featuredProduct' style={{ textDecoration: 'none' }}>Featured Products</NavLink>
-
-            <NavLink to='/users' style={{ textDecoration: 'none' }}>Users</NavLink>
-            <NavLink to='/customers' style={{ textDecoration: 'none' }}>Customers</NavLink>
-
-
-        </Stack>
-      </Box>
+               
+            >
+              <item.icon />
+              <span>{item.heading}</span>
+            </NavLink>
+            
+          );
+        })}
+        {/* signoutIcon */}
+        <div className="menuItem" onClick={handleSignout}>
+          <PersonIcon />
+          <span>Signout</span>
+        </div>
+      </div>
+    </motion.div>
     </>
+   
   );
 };
 

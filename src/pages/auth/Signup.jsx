@@ -87,14 +87,7 @@ const Signup = () => {
               Create an Account
             </Button>
           </form>
-          <Typography padding={2} textAlign="center">
-            Already have an Account?
-          </Typography>
-          <Link to="/">
-            <Button variant="outlined" fullWidth>
-              Log in
-            </Button>
-          </Link>
+         
         </Box>
       </Stack>
     </>

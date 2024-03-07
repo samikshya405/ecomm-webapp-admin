@@ -19,7 +19,7 @@ import {
 } from "../../Redux/product/prouctAction";
 import { toast } from "react-toastify";
 
-const EachRow = ({ product }) => {
+const EachRow = ({ product,index }) => {
   const [selectedSize, setSelectedSize] = useState(8);
 
   const [selectedSizeStock, setSelectedSizeStock] = useState(null);
@@ -42,7 +42,7 @@ const EachRow = ({ product }) => {
   }, [selectedSize]);
   return (
     <TableRow>
-      <TableCell>{product.uid.slice(0, 3)}..</TableCell>
+      <TableCell>{index+1}</TableCell>
       <TableCell>
         <img style={{ width: "70px" }} src={product.image} />
       </TableCell>

@@ -1,6 +1,7 @@
-import { collection, deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { setProductList, setSelectedProduct } from "./productSlice";
 import { db } from "../../Firebase";
+import { toast } from "react-toastify";
 
 export const getProductAction = () => async (dispatch) => {
   try {
@@ -43,6 +44,18 @@ export const deleteProductById = async(productId)=>{
   }catch(error){
     console.log(error)
 
+  }
+
+}
+
+export const updateProductAction =({uid , ...restProduct})=>async(dispatch)=>{
+  try {
+    const productRef = doc(db, "products", uid);
+    await setDoc(productRef, restProduct, { merge: true })
+    dispatch(getProductAction());
+    toast.success("Product updated!")
+  } catch(e) {
+    console.log(e);
   }
 
 }

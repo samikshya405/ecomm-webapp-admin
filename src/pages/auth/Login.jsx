@@ -75,17 +75,10 @@ const Login = () => {
             })}
 
             <Button variant="contained" type="submit" fullWidth>
-              Continue
+              Log in
             </Button>
           </form>
-          <Typography textAlign="center" padding={2}>
-            New?
-          </Typography>
-          <Link to='/signup'>
-            <Button variant="outlined" fullWidth >
-              create an Account
-            </Button>
-          </Link>
+          
         </Box>
       </Stack>
     </>

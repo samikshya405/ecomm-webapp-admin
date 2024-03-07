@@ -32,47 +32,53 @@ import { toast } from "react-toastify";
 import { db, storage } from "../../Firebase";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { useParams } from "react-router-dom";
-import { getProductAction } from "../../Redux/product/prouctAction";
+import ClearIcon from '@mui/icons-material/Clear';
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  getProductAction,
+  updateProductAction,
+} from "../../Redux/product/prouctAction";
 
 const inputs = [
   // { name: "productName", label: "Product Name*", type: "radio", required: true },
   { name: "productName", label: "Product Name*", type: "text", required: true },
   { name: "price", label: "Price*", type: "number", required: true },
-  { name: "image", label: "Image*", type: "file", required: true },
+
   {
     name: "description",
     label: "Description*",
     type: "textarea",
     required: true,
   },
+  // { name: "image", label: "Image*", type: "file", required: true },
 ];
-
 const initialState = {
   productName: "",
   description: "",
   price: "",
-  image: null,
 };
 
 const EditProduct = () => {
-  const {id} = useParams()
-  const {productList} = useSelector(state=>state.product)
-  const productSelected = productList.find(product=>product.uid===id)
-  // console.log(productSelected)
+  const { id } = useParams();
+  const { productList } = useSelector((state) => state.product);
+  const productSelected = productList.find((product) => product.uid === id);
+  console.log(productSelected)
 
   const { categoriesList, selectedSubCategoriesList } = useSelector(
     (state) => state.categories
   );
   const dispatch = useDispatch();
-  const [categoryOption, setCategoryOption] = useState('');
+  const navigate = useNavigate()
+  const [categoryOption, setCategoryOption] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [formData, setFormData] = useState(initialState);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [typeValue, setTypeValue] = useState("cloth/shoes");
-  const [stock, setStock] = useState('')
+  const [stock, setStock] = useState("");
+  const [image, setImage] = useState("");
+  const [imageUrl, setImageUrl] = useState('')
+  const [photos, setPhotos] = useState([{optional:''}])
 
- 
   const handleCategoryChange = (event) => {
     const selection = event.target.value;
     setCategoryOption(selection);
@@ -107,31 +113,63 @@ const EditProduct = () => {
     updatedBoxes[index][fieldName] = value;
     setBoxes(updatedBoxes);
   };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file)
+    
+  };
+  const handleImageDelete=(index)=>{
+    const updatedPhotos = [...photos];
+  updatedPhotos.splice(index, 1);
+  setPhotos(updatedPhotos);
+
+  }
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const imageUrl = await uploadImage(formData.image);
+      let imageSrc = productSelected.image
+      if(image){
+        imageSrc = await uploadImage(image);
+
+      }
+      const optionalImageUrl = []
+      for (const item of photos){
+        if(item.recentlyAdded){
+          const imgUrl = await uploadImage(item.optional)
+          optionalImageUrl.push(imgUrl)
+
+        }else{
+          const imgUrl = item.imageSrc
+          optionalImageUrl.push(imgUrl)
+        }
+        
+        
+      }
+      
+      // const imageSrc = await uploadImage(image);
       const docData = {
+        uid: id,
         category: categoryOption,
         subcategory: subCategory,
+        image:imageSrc,
+        optionalImages :optionalImageUrl,
         ...formData,
-        image: imageUrl,
-        type:typeValue
-        
+        type: typeValue,
       };
-      if(stock!==''){
-        docData.stock = stock
+     
+      if (stock !== "") {
+        docData.stock = stock;
       }
-      if(boxes[0].size!==''){
-        docData.sizes= boxes
+      if (boxes[0].size !== "") {
+        docData.sizes = boxes;
       }
-      const docRef = await addDoc(collection(db, "products"), docData);
-      toast.success("Product added");
-      setFormData(initialState);
-
-      setCategoryOption("");
-      setSubCategory("");
+      dispatch(updateProductAction(docData));
+      navigate('/product')
+      
+      
     } catch (error) {
       console.log(error);
     }
@@ -142,11 +180,52 @@ const EditProduct = () => {
     await uploadBytes(imageRef, image);
     return getDownloadURL(imageRef);
   };
+  const handleOptionalImageChange=(index,fieldName,value)=>{
+    const updatedPhotos = [...photos];
+    updatedPhotos[index][fieldName] = value;
+    updatedPhotos[index].imageSrc =URL.createObjectURL(value);
+    updatedPhotos[index].recentlyAdded = true;
+    setPhotos(updatedPhotos);
+    console.log(photos)
 
+  }
+  const handleAddImage=()=>{
+    setPhotos([...photos, {optional:''}])
+
+  }
   useEffect(() => {
     dispatch(categoryAction());
-    dispatch(getProductAction())
+    dispatch(getProductAction());
   }, []);
+  useEffect(() => {
+    if (productSelected?.uid) {
+      setTypeValue(productSelected.type);
+      const category = categoriesList.find(
+        (category) => category.name === productSelected.category
+      );
+      setCategoryOption(category?.name);
+      setSelectedCategory(category);
+      setSubCategory(productSelected.subcategory);
+      setImageUrl(productSelected.image);
+      initialState.productName = productSelected.productName;
+      initialState.price = productSelected.price;
+      initialState.description = productSelected.description;
+      if (productSelected.type === "other") {
+        setStock(productSelected.stock);
+      }
+      if(productSelected.type==='cloth/shoes'){
+        setBoxes(productSelected.sizes)
+      }
+      if(productSelected.optionalImages){
+        const imageArr =[]
+        for(const item of productSelected.optionalImages){
+          let a = {optional:'', imageSrc:item}
+          imageArr.push(a)
+        }
+        setPhotos(imageArr)
+      }
+    }
+  }, [productSelected]);
 
   useEffect(() => {
     if (selectedCategory?.id) {
@@ -162,7 +241,7 @@ const EditProduct = () => {
             <InputLabel id="category-label">Select Categories*</InputLabel>
             <Select
               labelId="category-label"
-              value={categoryOption}
+              value={categoryOption || ""}
               onChange={handleCategoryChange}
               fullWidth
               required
@@ -178,7 +257,7 @@ const EditProduct = () => {
             </InputLabel>
             <Select
               labelId="sub-category-label"
-              value={subCategory}
+              value={subCategory || ""}
               onChange={handleSubCategoryChange}
               fullWidth
               required
@@ -237,14 +316,14 @@ const EditProduct = () => {
               </div>
             ) : (
               <>
-              <InputLabel>Stock*</InputLabel>
-              <TextField
-                name="stock"
-                type="number"
-                
-                onChange={(e)=>setStock(e.target.value)}
-                required:true
-              />
+                <InputLabel>Stock*</InputLabel>
+                <TextField
+                  name="stock"
+                  type="number"
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                  required
+                />
               </>
             )}
 
@@ -256,9 +335,38 @@ const EditProduct = () => {
                 onChange={handleChange}
               />
             ))}
+            <InputLabel  >Main Image *</InputLabel>
+            <img width={"100px"} src={imageUrl} alt="" /> 
+            <TextField type="file"  onChange={handleImageChange} margin="normal" />
+            <InputLabel>Optional Image</InputLabel>
+            {photos.length==0 && (
+              <IconButton onClick={handleAddImage}>
+              <AddCircleIcon sx={{ fontSize: "40px" }} />
+            </IconButton>
+
+            )}
+            {
+              photos.map((photo,index)=>{
+                return <Box padding={2} key={index}>
+                  <IconButton onClick={()=>handleImageDelete(index)}><ClearIcon/></IconButton>
+                  <img width={'50px'} src={photo.imageSrc} alt='No image'/>
+                  
+                  <TextField type="file" onChange={(e)=>handleOptionalImageChange(index,"optional", e.target.files[0])} /> 
+                  {index === photos.length - 1 && (
+                      <IconButton onClick={handleAddImage}>
+                        <AddCircleIcon sx={{ fontSize: "40px" }} />
+                      </IconButton>
+                    )}
+                
+                </Box>
+              })
+            }
+
             <Button variant="contained" type="submit" fullWidth>
-              Add
+              Update
             </Button>
+           
+
           </form>
         </Box>
       </Stack>

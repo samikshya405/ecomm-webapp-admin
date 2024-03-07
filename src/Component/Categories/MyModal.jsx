@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal, Box, Typography, TextField } from "@mui/material";
+import { Button, Modal, Box, Typography, TextField, InputLabel } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "../../Firebase";
@@ -86,6 +86,8 @@ const MyModal = ({ title, id }) => {
             label="categories"
             onChange={handleChange}
           />
+          <InputLabel>Catgeory Image</InputLabel>
+          <TextField type="file"  />
           
           <Box>
             <Button
