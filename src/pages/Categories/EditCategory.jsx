@@ -45,47 +45,57 @@ const EditCategory = () => {
     (category) => category.id === id
   );
   // console.log(category)
-  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [categoryOption, setCategoryOption] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [categoryName, setCategoryName] = useState('')
-  const [image, setImage] = useState({imageSrc:'', categoryImage:''})
+  const [categoryName, setCategoryName] = useState("");
+  const [image, setImage] = useState({ imageSrc: "", categoryImage: "" });
+  const [imageUploaded, setImageUploaded] = useState(false);
   const handleImageChange = (e) => {
     const { files } = e.target;
-    setImage({imageSrc:URL.createObjectURL(files[0]), categoryImage:files[0]})
-    
+    setImage({
+      ...image,
+      imageSrc: URL.createObjectURL(files[0]),
+      categoryImage: files[0],
+    });
+    setImageUploaded(true);
   };
   const handleCategoryChange = (event) => {
     const selection = event.target.value;
     setCategoryOption(selection);
-    
   };
- const  handleCategoryNameChange=(e)=>{
-  setCategoryName(e.target.value)
-  
-
- }
+  const handleCategoryNameChange = (e) => {
+    setCategoryName(e.target.value);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const imageUrl = await uploadImage(image.categoryImage);
+    let imageUrl = "";
+    if (imageUploaded) {
+      imageUrl = await uploadImage(image.categoryImage);
+    } else {
+      imageUrl = image.imageSrc;
+    }
+
     const docData = {
       name: categoryName,
       categoryImage: imageUrl,
     };
 
     if (!selectedCategory) {
-      dispatch(updateCategory(category.id,docData))
-      console.log('hey')
-      // dispatch(addCategory(docData));
+      dispatch(updateCategory(category.id, docData));
     } else {
-      docData.parentCat=categoryOption
-      dispatch(updateSubCategory( selectedCategory.parentCatId,selectedCategory.id, docData))
-      // dispatch(addSubCategory(selectedCategory.id, docData));
-      console.log('ok')
+      docData.parentCat = categoryOption;
+      dispatch(
+        updateSubCategory(
+          selectedCategory.parentCatId,
+          selectedCategory.id,
+          docData
+        )
+      );
     }
+    navigate('/categories')
   };
   const uploadImage = async (image) => {
     const imageRef = storageRef(storage, `images/${image.name}`);
@@ -101,23 +111,27 @@ const EditCategory = () => {
     dispatch(getAllSubCategory(categoriesList));
   }, [categoriesList]);
   useEffect(() => {
-    if(category?.id){
-      if(category?.categoryImage){
-        setImage({...image, imageSrc:category.categoryImage})
-
+    if (category?.id) {
+      if (category?.categoryImage) {
+        setImage((prevImage) => ({
+          ...prevImage,
+          imageSrc: category.categoryImage,
+        }));
       }
 
-    
-    if (category?.parentCat) {
-      setCategoryOption(category.parentCat);
-      const selection = category.name;
-  const selected = subCategoryList.find((category) => category.name === selection);
-    setSelectedCategory(selected);
-    } else {
-      setCategoryOption("No Parent Category");
+      if (category?.parentCat) {
+        setCategoryOption(category.parentCat);
+        const selection = category.name;
+        const selected = subCategoryList.find(
+          (category) => category.name === selection
+        );
+        setSelectedCategory(selected);
+      } else {
+        setCategoryOption("No Parent Category");
+      }
+
+      setCategoryName(category.name);
     }
-    setCategoryName(category.name)}
-    
   }, [category]);
   return (
     <Adminlayout title={"Edit Category"}>
@@ -137,10 +151,18 @@ const EditCategory = () => {
             </MenuItem>
           ))}
         </Select>
-        <CustomInput  label="Category Name" type={'text'} value={categoryName} onChange={handleCategoryNameChange}/>
-        
-        <CustomInput label = "Category Image" type={'file'} onChange={handleImageChange}/>
-        <img width={'100px'} src={image.imageSrc} alt=''/> <br />
+        <CustomInput
+          label="Category Name"
+          type={"text"}
+          value={categoryName}
+          onChange={handleCategoryNameChange}
+        />
+        <CustomInput
+          label="Category Image"
+          type={"file"}
+          onChange={handleImageChange}
+        />
+        <img width={"100px"} src={image.imageSrc} alt="" /> <br />
         <Button variant="contained" type="submit">
           Update
         </Button>

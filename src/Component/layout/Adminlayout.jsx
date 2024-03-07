@@ -11,15 +11,18 @@ const Adminlayout = ({title,children}) => {
     <div className='App'>
       <div className='AppGlass'>
         <Sidebar />
-        {/* <main>
-       <h2 align='center' style={{ padding: 10, textTransform:'capitalize' }} >{title}</h2>
-      {children}
-      </main> */}
-      <main >
-        <Box height={'10vh'} width={'100%'} sx={{background:'var(--glass)'}}></Box>
-        <h1>{title}</h1>
+       
+      <main>
+        {/* <Box height={'10vh'} width={'100%'} sx={{background:'var(--glass)'}}></Box> */}
+        <Box padding={2}><h2 style={{textTransform:'capitalize'}}>{title}</h2></Box>
+        <Box padding={2}>
         {children}
+        </Box>
+        
+        
+        
       </main>
+      
       
 
 
@@ -27,20 +30,7 @@ const Adminlayout = ({title,children}) => {
 
 
     </div>
-    // <Box display='flex' >
-    // <Sidebar/>
-    // <div  style={{width:'100%'}} >
-    // {/* <Header /> */}
-    // <main>
-    //   <h2 align='center' style={{ padding: 10, textTransform:'capitalize' }} >{title}</h2>
-    //   {children}
-    //   </main>
-    // </div>
-    
-    
-    
-    
-    // </Box>
+  
   )
 }
 

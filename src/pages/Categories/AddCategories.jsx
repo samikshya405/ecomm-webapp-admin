@@ -93,7 +93,7 @@ const AddCategories = () => {
         >
           <MenuItem value="No Parent Category">No Parent Category</MenuItem>
           {categoriesList.map((category, index) => (
-            <MenuItem key={index} value={category.name}>
+            <MenuItem key={index} value={category.name} sx={{textTransform:'capitalize'}}>
               {category.name}
             </MenuItem>
           ))}

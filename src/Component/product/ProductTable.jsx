@@ -29,7 +29,7 @@ const ProductTable = () => {
   };
   return (
     <Box padding={2}>
-      <TableContainer container component={Paper}>
+      <TableContainer  component={Paper}>
       <Table>
         <TableHead>
           <TableRow >

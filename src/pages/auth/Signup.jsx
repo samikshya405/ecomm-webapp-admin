@@ -57,9 +57,10 @@ const Signup = () => {
       await setDoc(doc(db, "users", uid), {
         ...restFormData,
         uid,
+        role:'admin'
       });
       toast.success("user created successfully!");
-      navigate('/login')
+      navigate('/users')
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

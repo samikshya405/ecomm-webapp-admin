@@ -19,8 +19,8 @@ import {
 } from "../../Redux/product/prouctAction";
 import { toast } from "react-toastify";
 
-const EachRow = ({ product,index }) => {
-  const [selectedSize, setSelectedSize] = useState(8);
+const EachRow = ({ product, index }) => {
+  const [selectedSize, setSelectedSize] = useState("");
 
   const [selectedSizeStock, setSelectedSizeStock] = useState(null);
   const dispatch = useDispatch();
@@ -34,7 +34,12 @@ const EachRow = ({ product,index }) => {
     }
   };
   useEffect(() => {
-    // Update selectedSizeStock when selectedSize changes
+    if (product.sizes) {
+      setSelectedSize(product?.sizes[0].size);
+    }
+  }, []);
+  useEffect(() => {
+   
     if (product.sizes) {
       const sizeStock = product.sizes.find((item) => item.size == selectedSize);
       setSelectedSizeStock(sizeStock);
@@ -42,13 +47,19 @@ const EachRow = ({ product,index }) => {
   }, [selectedSize]);
   return (
     <TableRow>
-      <TableCell>{index+1}</TableCell>
+      <TableCell>{index + 1}.</TableCell>
       <TableCell>
         <img style={{ width: "70px" }} src={product.image} />
       </TableCell>
-      <TableCell>{product.category}</TableCell>
-      <TableCell>{product.subcategory}</TableCell>
-      <TableCell>{product.productName.slice(0, 15)}..</TableCell>
+      <TableCell style={{ textTransform: "capitalize" }}>
+        {product.category}
+      </TableCell>
+      <TableCell style={{ textTransform: "capitalize" }}>
+        {product.subcategory}
+      </TableCell>
+      <TableCell style={{ textTransform: "capitalize" }}>
+        {product.productName.slice(0, 15)}..
+      </TableCell>
       {product.sizes?.length > 0 ? (
         <TableCell>
           <Stack direction={"row"}>

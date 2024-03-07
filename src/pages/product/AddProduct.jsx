@@ -211,7 +211,7 @@ const AddProduct = () => {
               required
             >
               {categoriesList.map((category, index) => (
-                <MenuItem key={index} value={category.name}>
+                <MenuItem key={index} value={category.name} sx={{textTransform:'capitalize'}}>
                   {category.name}
                 </MenuItem>
               ))}
@@ -227,7 +227,7 @@ const AddProduct = () => {
               required
             >
               {selectedSubCategoriesList.map((subcategory, index) => (
-                <MenuItem key={index} value={subcategory.name}>
+                <MenuItem key={index} value={subcategory.name} sx={{textTransform:'capitalize'}}>
                   {subcategory.name}
                 </MenuItem>
               ))}
