@@ -77,6 +77,10 @@ const Login = () => {
             <Button variant="contained" type="submit" fullWidth>
               Log in
             </Button>
+            <Box padding={2}>
+            <Typography>Email: test1122@gmail.com</Typography>
+            <Typography>Password: 123123</Typography>
+            </Box>
           </form>
           
         </Box>
