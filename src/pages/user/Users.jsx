@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../Firebase";
 import { Link } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
@@ -37,6 +37,20 @@ const users = () => {
       console.log(error);
     }
   };
+  const handleDelete=async(id)=>{
+
+    try{
+      const confirmDelete = window.confirm("Are you sure you want to delete?");
+      if (confirmDelete) {
+      await deleteDoc(doc(db, "users", id));
+      getAdmins()}
+
+    }catch(error){
+      console.log(error)
+
+    }
+
+  }
   useEffect(() => {
     getAdmins()
   }, []);
@@ -65,7 +79,7 @@ const users = () => {
             <TableCell>{item.email}</TableCell>
             <TableCell>{item.phone}</TableCell>
             <TableCell>
-              <IconButton color="error" >
+              <IconButton color="error" onClick={()=>handleDelete(item.id)}>
                 <DeleteIcon/>
               </IconButton>
             </TableCell>

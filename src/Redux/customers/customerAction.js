@@ -19,3 +19,4 @@ export const getAllCustomers = () => async (dispatch) => {
         console.log(error);
       }
 };
+
