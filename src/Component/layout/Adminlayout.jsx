@@ -12,7 +12,7 @@ const Adminlayout = ({ title, children }) => {
         <Sidebar />
 
         <main>
-          {/* <Box height={'10vh'} width={'100%'} sx={{background:'var(--glass)'}}></Box> */}
+          <Box height={'5vh'} width={'100%'} sx={{background:'var(--glass)'}}></Box>
           <Box padding={2}>
             <h2 style={{ textTransform: "capitalize" }}>{title}</h2>
           </Box>
