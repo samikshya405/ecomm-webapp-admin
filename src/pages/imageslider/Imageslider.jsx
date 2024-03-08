@@ -34,10 +34,12 @@ const Imageslider = () => {
   const [image, setImage] = useState(null);
   const dispatch = useDispatch();
   const { images } = useSelector((state) => state.imageSlider);
+  // const [imageUploaded, setimageUploaded] = useState(false)
   const handleChange = (e) => {
     const { files } = e.target;
 
     setImage(files[0]);
+    
   };
   const handleUplaod = async () => {
     try {
@@ -58,7 +60,7 @@ const Imageslider = () => {
   };
   useEffect(() => {
     dispatch(getSliderImage());
-  }, [images]);
+  }, []);
   return (
     <Adminlayout title="Image Slider">
       <Box padding={2}>
@@ -114,3 +116,5 @@ const Imageslider = () => {
 };
 
 export default Imageslider;
+
+

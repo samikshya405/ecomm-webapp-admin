@@ -123,7 +123,7 @@ const EditCategory = () => {
         setCategoryOption(category.parentCat);
         const selection = category.name;
         const selected = subCategoryList.find(
-          (category) => category.name === selection
+          (item) => item.name === selection
         );
         setSelectedCategory(selected);
       } else {
@@ -172,3 +172,5 @@ const EditCategory = () => {
 };
 
 export default EditCategory;
+
+

@@ -80,7 +80,13 @@
     background: var(--pink);
     margin-right: calc(1rem - 8px);
   }
-  
+  .cross{
+    cursor: pointer;
+    display: none;
+  }
+  .hidemenu{
+    display: none;
+  }
   
   /* Tablets */
   @media screen and (max-width: 1200px) {
@@ -97,6 +103,7 @@
     .logo{
       display: none;
     }
+    
   }
   
   @media screen and (max-width: 768px) {
@@ -120,15 +127,24 @@
     }
     .bars{
       display: flex;
+      align-items: center;
+      justify-content: start;
       position: fixed;
-      top: 2rem;
-      left:60%;
+      top: 0;
+      left: 60%;
+      
+      
       background:#ffe0e0;
       padding:10px;
       border-radius: 10px;
       z-index: 9;
+      
     }
     .close{
       left: -60%;
     }
+    .hidemenu{
+      display: block;
+    }
+    
   }

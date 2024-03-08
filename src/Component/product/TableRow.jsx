@@ -21,8 +21,10 @@ import { toast } from "react-toastify";
 
 const EachRow = ({ product, index }) => {
   const [selectedSize, setSelectedSize] = useState("");
-
   const [selectedSizeStock, setSelectedSizeStock] = useState(null);
+  
+
+  
   const dispatch = useDispatch();
 
   const handleDeleteProduct = (product) => {
@@ -39,11 +41,11 @@ const EachRow = ({ product, index }) => {
     }
   }, []);
   useEffect(() => {
-   
-    if (product.sizes) {
-      const sizeStock = product.sizes.find((item) => item.size == selectedSize);
-      setSelectedSizeStock(sizeStock);
-    }
+
+  if (product.sizes) {
+    const sizeStock = product.sizes.find((item) => item.size == selectedSize);
+    setSelectedSizeStock(sizeStock);
+  }
   }, [selectedSize]);
   return (
     <TableRow>

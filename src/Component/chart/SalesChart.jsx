@@ -7,6 +7,7 @@ import {
   PointElement,
   Legend,
   Tooltip,
+  Filler
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { Box, Paper } from "@mui/material";
@@ -17,7 +18,8 @@ ChartJS.register(
   LinearScale,
   PointElement,
   Legend,
-  Tooltip
+  Tooltip,
+  Filler
 );
 const SalesChart = () => {
   const data = {

@@ -46,11 +46,11 @@ const Login = () => {
   };
 
   useEffect(()=>{
-    if(userInfo.uid){
-      navigate('/')
+    if (userInfo.uid) {
+      navigate('/');
     }
 
-  },[userInfo])
+  },[userInfo.uid])
   
   return (
     <>

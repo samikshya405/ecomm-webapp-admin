@@ -43,15 +43,15 @@ const SubCategoriesTable = ({subCategoryList,handleCatgeoryEdit,handleSubCategor
             return (
               <TableRow key={item.id}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.parentCat}</TableCell>
+                <TableCell sx={{textTransform:'capitalize'}}>{item.name}</TableCell>
+                <TableCell sx={{textTransform:'capitalize'}}>{item.parentCat}</TableCell>
                 <TableCell>
                   <img width={"50px"} src={item.categoryImage} alt="" />
                 </TableCell>
                 <TableCell>
                   <IconButton
                     color="primary"
-                    onClick={(event) => handleCatgeoryEdit(event, item)}
+                    onClick={(event) => handleCatgeoryEdit( item)}
                   >
                     <EditIcon />
                   </IconButton>
