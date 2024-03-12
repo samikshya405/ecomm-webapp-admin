@@ -24,7 +24,7 @@
 }
 .form-wrapper{
     height: 100vh;
-    background-color: rgba(14, 147, 225, 0.92);
+    background-color: var(--pink);
 }
 .navbar{
     background-color: skyblue !important;

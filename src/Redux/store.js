@@ -6,6 +6,8 @@ import categoriesReducer from './Categories/categoriesSlice'
 import productReducer from './product/productSlice'
 import imageSliderReducers from './imageslider/imageslider'
 import customerReducers from './customers/customerSlice'
+import orderReducer from './order/orderSlice'
+import reviewReducer from './review/reviewSlice'
 
 
 const persistConfig = {
@@ -20,7 +22,9 @@ export const store = configureStore({
         categories:categoriesReducer,
         product:productReducer,
         imageSlider:imageSliderReducers,
-        customer:customerReducers
+        customer:customerReducers,
+        order:orderReducer,
+        review:reviewReducer
     }
    
 })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
@@ -18,6 +18,7 @@ import FeaturedProduct from './pages/Featured/FeaturedProduct'
 import Imageslider from './pages/imageslider/Imageslider'
 import AddCategories from './pages/Categories/AddCategories'
 import EditCategory from './pages/Categories/EditCategory'
+import Reviews from './pages/reviews/Reviews'
 
 const App = () => {
   return (
@@ -40,6 +41,8 @@ const App = () => {
       <Route path='/flashSale' element={<PrivateRoute><FlashSale/></PrivateRoute>}/>
       <Route path='/featuredProduct' element={<PrivateRoute><FeaturedProduct/></PrivateRoute>}/>
       <Route path='/imageSlider' element={<PrivateRoute><Imageslider/></PrivateRoute>}/>
+      <Route path='/reviews' element={<PrivateRoute><Reviews/></PrivateRoute>}/>
+      <Route path='*' element={<Navigate to='/'/>}/>
 
 
 

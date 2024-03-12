@@ -11,18 +11,24 @@ import { getProductAction } from "../../Redux/product/prouctAction";
 import { getAllCustomers } from "../../Redux/customers/customerAction";
 import SalesChart from "../../Component/chart/SalesChart";
 import RecentOrder from "../../Component/Order/RecentOrder";
+import { getAllOrderHistory } from "../../Redux/order/orderHistoryAction";
 const Dashboard = () => {
   const { productList } = useSelector((state) => state.product);
   const { customers } = useSelector((state) => state.customer);
+  const {allOrder} =useSelector((state)=>state.order)
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProductAction());
     dispatch(getAllCustomers());
+    dispatch(getAllOrderHistory())
   }, []);
+  const totalSales = allOrder.reduce((a, b) => {
+    return a + b.totalPrice;
+  }, 0);
   return (
     <Adminlayout title={"dashboard"}>
-      <Grid container>
-        <Grid item xs={12} sm={12} md={12} lg={9} >
+      {/* <Grid container>
+        <Grid item xs={12} sm={12} md={12} lg={9} > */}
         <Grid container spacing={2}>
         <Grid item xs={6} sm={6} md={6} lg={3}>
           <Paper
@@ -50,7 +56,7 @@ const Dashboard = () => {
             </Box>
             <Box padding={2}>
               <Typography variant="h5">Sales</Typography>
-              <h2 style={{ textAlign: "center" }}>$565</h2>
+              <h2 style={{ textAlign: "center" }}>${parseFloat(totalSales.toFixed(2))}</h2>
             </Box>
           </Paper>
         </Grid>
@@ -80,7 +86,7 @@ const Dashboard = () => {
             </Box>
             <Box padding={2}>
               <Typography variant="h5">Orders</Typography>
-              <h2 style={{ textAlign: "center" }}>5</h2>
+              <h2 style={{ textAlign: "center" }}>{allOrder.length}</h2>
             </Box>
           </Paper>
         </Grid>
@@ -150,9 +156,9 @@ const Dashboard = () => {
       <SalesChart/>
       <h2 style={{margin:'30px 0'}}>Recent Orders</h2>
       <RecentOrder/>
-        </Grid>
+        {/* </Grid> */}
 
-      </Grid>
+       {/* </Grid> */}
      
     </Adminlayout>
   );

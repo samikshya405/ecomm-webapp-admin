@@ -1,13 +1,32 @@
 import React, { useState } from "react";
-import { Button, Modal, Box, Typography, TextField, InputLabel } from "@mui/material";
+import {
+  Button,
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  InputLabel,
+  IconButton,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "../../Firebase";
 import { toast } from "react-toastify";
+import EditIcon from "@mui/icons-material/Edit";
+import { useDispatch } from "react-redux";
+import { updateStatus } from "../../Redux/order/orderHistoryAction";
 
-const MyModal = ({ title, id }) => {
+const MyModal = ({ order }) => {
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+
+  const [selectedValue, setSelectedValue] = useState(order.status);
+  const dispatch=useDispatch()
+
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -16,51 +35,18 @@ const MyModal = ({ title, id }) => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleAdd = async () => {
-    if (inputValue.trim() == "") {
-      return;
-    }
-    if (title === "category") {
-      try {
-        const docRef = await addDoc(collection(db, "categories"), {
-          name: inputValue,
-        });
-        toast.success("categories added");
-        setOpen(false);
-        setInputValue('')
-        
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (title === "subCategory") {
-      const parentDocRef = doc(db, "categories", id);
-      const subcollectionRef = collection(parentDocRef, "subCategories");
+const handleAdd=()=>{
+  const updateddata ={...order,status:selectedValue}
+  dispatch(updateStatus(order.uid,updateddata))
 
-    
-      const subcollectionData = {
-        name: inputValue,
-      };
+  setOpen(false);
 
-      try {
-        const newSubDocRef = await addDoc(subcollectionRef, subcollectionData);
-
-        toast.success("subcategories added");
-        setOpen(false);
-        setInputValue('')
-      } catch (error) {
-        console.error("Error adding document: ", error);
-      }
-    }
-  };
-  const handleChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
+}
   return (
     <div>
-      <Button onClick={handleOpen} sx={{ color: "black", fontWeight: "600" }}>
-        <AddIcon /> Add Categories
-      </Button>
+      <IconButton color="primary" onClick={handleOpen}>
+        <EditIcon />
+      </IconButton>
       <Modal
         open={open}
         onClose={handleClose}
@@ -77,18 +63,25 @@ const MyModal = ({ title, id }) => {
             bgcolor: "background.paper",
             p: 2,
             width: "500px",
-            height: "200px",
+            // height: "200px",
           }}
         >
-          <TextField
-            value={inputValue}
-            fullWidth
-            label="categories"
+          <h2>Update Order</h2>
+          <InputLabel>Order-Number</InputLabel>
+          <TextField value={order.orderNumber} fullWidth />
+          <InputLabel>Status</InputLabel>
+          <Select
+            labelId="select-label"
+            id="select"
+            value={selectedValue}
             onChange={handleChange}
-          />
-          <InputLabel>Catgeory Image</InputLabel>
-          <TextField type="file"  />
-          
+            fullWidth
+          >
+            <MenuItem value="processing">processing</MenuItem>
+            <MenuItem value="shipped">shipped</MenuItem>
+            <MenuItem value="delivered">delivered</MenuItem>
+          </Select>
+
           <Box>
             <Button
               sx={{ margin: "5px" }}
@@ -96,7 +89,7 @@ const MyModal = ({ title, id }) => {
               onClick={handleAdd}
               variant="contained"
             >
-              ADD
+              update status
             </Button>
           </Box>
         </Box>
