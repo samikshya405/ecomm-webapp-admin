@@ -11,7 +11,6 @@ import {
   TableHead,
   TableRow,
   Typography,
- 
 } from "@mui/material";
 // import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -30,8 +29,6 @@ const OrderHistory = () => {
   const dispatch = useDispatch();
   const { allOrder } = useSelector((state) => state.order);
   const { customers } = useSelector((state) => state.customer);
-
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -70,24 +67,26 @@ const OrderHistory = () => {
                 <TableRow key={order.orderNumber}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
-                  <Box
-                    sx={{
-                      background:
-                        order.status === "processing"
-                          ? "yellow"
-                          : order.status === "shipped"
-                          ? "blue"
-                          : order.status === "delivered"
-                          ? "green"
-                          : "",
+                    <Box
+                      sx={{
+                        background:
+                          order.status === "processing"
+                            ? "yellow"
+                            : order.status === "shipped"
+                            ? "blue"
+                            : order.status === "delivered"
+                            ? "green"
+                            : "",
+                        minWidth: "fit-content",
+                        maxWidth: "70%",
 
-                      width: "fit-content",
-                      padding:'10px',
-                      color:order.status==='processing' ? 'black':'white'
-                    }}
-                  >
-                    {order.status}
-                  </Box>
+                        padding: "10px",
+                        color:
+                          order.status === "processing" ? "black" : "white",
+                      }}
+                    >
+                      {order.status}
+                    </Box>
                   </TableCell>
                   <TableCell>
                     {new Date(order.orderDate).toLocaleDateString()}
@@ -95,7 +94,7 @@ const OrderHistory = () => {
                   <TableCell>{order?.orderNumber}</TableCell>
                   <TableCell>
                     <Typography>{customerInfo?.fullName}</Typography>
-                    <Typography>{customerInfo?.address}</Typography>
+                    <Typography>{customerInfo?.address || '1 park road auburn'}</Typography>
                   </TableCell>
                   <TableCell>
                     {order.orderDetails.map((product, index) => {
@@ -108,9 +107,7 @@ const OrderHistory = () => {
                   </TableCell>
                   <TableCell>$1245</TableCell>
                   <TableCell>
-                    <MyModal order={order}/>
-                    
-                    
+                    <MyModal order={order} />
                   </TableCell>
                 </TableRow>
               );
